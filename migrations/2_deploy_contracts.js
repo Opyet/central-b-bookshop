@@ -1,5 +1,6 @@
-var SimpleStorage = artifacts.require("./SimpleStorage.sol");
+var CentralBBookshop = artifacts.require("CentralBBookshop");
+const commission = 10;
 
 module.exports = function(deployer) {
-  deployer.deploy(SimpleStorage);
+  deployer.deploy(CentralBBookshop, commission);
 };

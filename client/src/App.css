@@ -1,5 +1,5 @@
 .App {
-  text-align: center;
+  
 }
 
 .App-logo {
@@ -19,4 +19,31 @@
 
 .App-link {
   color: #09d3ac;
+}
+
+.unauthorised-wrapper{
+  flex-grow: 1;
+}
+.welcome{
+  margin-top: 30%;
+}
+
+.card-title{
+  text-transform: uppercase;
+  font-size: 15px;
+  display: block;
+}
+.figures{
+  font-size: 44px;
+  display: block;
+}
+.hint-text{
+  display: block;
+  font-size: smaller;  
+}
+.text-secondary{
+  color:#da2c01;
+}
+.text-primary{
+  color:#556cd6;
 }
