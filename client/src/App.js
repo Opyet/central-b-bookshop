@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Unauthorized from "./pages/Unauthorized";
 
 import "./App.css";
+import Loader from "./components/loader";
 
 
 class App extends Component {
@@ -20,7 +21,8 @@ class App extends Component {
       isAuthorized: false,
       isAdmin: false,
       isSeller: false,
-      isReader: false
+      isReader: false,
+      pageLoading: true
     };
 
     this.userSignin = this.userSignin.bind(this);
@@ -77,32 +79,35 @@ class App extends Component {
     this.setState({ storageValue: response });
   };
 
-  userSignin = async () =>{
+  userSignin = () =>{
     // sign user in
     const { accounts, contract } = this.state;
-    let response = await contract.methods.getUser().call({from: accounts[0]});
-    console.log(response);
-    
-    //authentication is successful
-    if(response[0] == true){
-      this.setState({isAuthorized: true});
-      localStorage.setItem('isAuthenticated', true);
-      // admin check
-      if(response[2] == true){
-        this.setState({isAdmin: true});
+    let user = contract.methods.getUser().call({from: accounts[0]});
+    user.then(response => {
+      //authentication is successful
+      console.log('user: ',response);
+
+      if(response && response[0] == true){
+        this.setState({isAuthorized: true});
+        localStorage.setItem('isAuthenticated', true);
+        // admin check
+        if(response[2] == true){
+          this.setState({isAdmin: true});
+        }
+        //is seller
+        else if(response[1] == true){
+          this.setState({isSeller: true});
+        }
+        else{
+          this.setState({isReader: true});
+        }
+        this.setState({pageLoading: false});
       }
-      //is seller
-      else if(response[1] == true){
-        this.setState({isSeller: true});
-      }
-      else{
-        this.setState({isReader: true});
-      }
-    }
-    else{
+    }).catch(error=>{
       this.setState({isAuthorized: false});
       localStorage.setItem('isAuthenticated', false);
-    }
+      this.setState({pageLoading: false});
+    })   
     
   }
 
@@ -110,31 +115,30 @@ class App extends Component {
     // if (!this.state.web3) {
     //   return <div>Loading Web3, accounts, and contract...</div>;
     // }
-    return (
-      <div className="App">
-        <BrowserRouter>
-          <MyProvider>
-            <UserContext.Consumer>
-              {(context) =>
-                <>
-                  {this.state.isAuthorized ?
-                    <Switch>
-                      <Route exact path="/" render={props => <Home {...props} context={context} baseAppState={this.state} /> } />
-                    </Switch> :
-                      <>
-                        {/* <Redirect to="/unauthorized"/> */}
-                        <Switch>
-                          <Route exact path="/unauthorized" render={props => <Unauthorized {...props} context={context} baseAppState={this.state} /> } />
-                        </Switch>
-                      </>                   
-                  }
-                </>
-              }
-            </UserContext.Consumer>
-          </MyProvider>
-        </BrowserRouter>
-      </div>
-    );
+    if(this.state.pageLoading){
+      return (
+        <Loader type={'spinningBubbles'} size={'medium'} color={'#556cd6'} />
+      );
+    }
+    else{
+      return (
+        <div className="App">
+          <BrowserRouter>
+            <MyProvider>
+              <UserContext.Consumer>
+                {(context) =>                
+                      <Switch>
+                        <Route exact path="/" render={()=>{return(this.state.isAuthorized ? <Redirect to="/bookshop"/> : <Redirect to="/unauthorized"/>)}} />
+                        <Route exact path="/bookshop" render={props => {return(this.state.isAuthorized ? <Home {...props} context={context} baseAppState={this.state} />  : <Redirect to="/unauthorized"/> )} } />
+                        <Route exact path="/unauthorized" render={props => {return(this.state.isAuthorized ? <Redirect to="/bookshop"/>  : <Unauthorized {...props} context={context} baseAppState={this.state} /> )}} />
+                      </Switch>
+                }
+              </UserContext.Consumer>
+            </MyProvider>
+          </BrowserRouter>
+        </div>
+      );
+    }
   }
 }
 

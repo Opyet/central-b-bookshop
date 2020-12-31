@@ -18,12 +18,10 @@ class Unauthorized extends Component {
     }
 
     UNSAFE_componentWillMount =()=>{
-        if(localStorage.getItem('isAuthenticated')){
-            window.href = "/";
-        }
-    }
+        // if(localStorage.getItem('isAuthenticated')){
+        //     window.href = "/";
+        // }
 
-    componentDidUpdate() {
         if(!this.state.accounts){
             this.setState({accounts: this.props.baseAppState.accounts})
             // this.setState({web3: this.props.baseAppState.web3})
@@ -39,6 +37,10 @@ class Unauthorized extends Component {
             this.setState({contract: this.props.baseAppState.contract})
                 //this.props.context.updateContext('contract', this.state.contract));
         }
+    }
+
+    componentDidUpdate() {
+
     }
 
     onShopEntry = (event) =>{

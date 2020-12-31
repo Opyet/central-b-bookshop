@@ -57,9 +57,22 @@ class Home extends Component {
         this.fetchOwnedBooks = this.fetchOwnedBooks.bind(this);
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    UNSAFE_componentWillMount(prevProps, prevState) {
+        if(this.props.baseAppState.isAdmin && !this.state.isAdmin){
+            this.setState({isAdmin: true});
+        }else if(this.props.baseAppState.isSeller && !this.state.isSeller){
+            this.setState({isSeller: true});
+        }else{
+            if(!this.state.isReader){
+                this.setState({isReader: true});
+            }
+        }
+
         if(!this.state.accounts){
-            this.setState({accounts: this.props.baseAppState.accounts}, () => this.fetchOwnedBooks())
+            this.setState({accounts: this.props.baseAppState.accounts}, () => {
+                if(this.state.isSeller){
+                    this.fetchOwnedBooks()
+                }});
                 //this.props.context.updateContext('accounts', this.state.accounts));            
         }        
         if(!this.state.web3){
@@ -71,15 +84,7 @@ class Home extends Component {
                 //this.props.context.updateContext('contract', this.state.contract));
         }
 
-        if(this.props.baseAppState.isAdmin && !this.state.isAdmin){
-            this.setState({isAdmin: true});
-        }else if(this.props.baseAppState.isSeller && !this.state.isSeller){
-            this.setState({isSeller: true});
-        }else{
-            if(!this.state.isReader){
-                this.setState({isReader: true});
-            }
-        }
+        
 
         // if(this.state.accounts){
         //     this.fetchOwnedBooks();
