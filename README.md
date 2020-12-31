@@ -7,7 +7,7 @@ Book owners can enlist and sell their digital publications.
 Readers can browse and purchase eBooks using cryptocurrency.
 
 ### Administrator
-The eBookshop Admin approves book owners, and assigns tokens to users (book owners and readers).
+The eBookshop Admin deploys contract and sets the minimum commission to be gotten from books. Admin also approves book owners (sellers) to add books and collect funds.
 
 ### Book Owner
 A publisher or an author (who self-published) has a new eBook to sell to global readers without necessarily having
