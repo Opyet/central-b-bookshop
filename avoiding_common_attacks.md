@@ -3,16 +3,17 @@
 ## Safety Checklist
 * Automated unit tests were written to ensure that contract logic behaves expectedly.
 * User inputs were validated at frontend and verified in modifiers before function execution.
-* Recursive calls were avoided to prevent recursive attacks.
+* Recursive calls were avoided to prevent re-entrancy attacks.
 * State ``variables`` and ``functions`` visibility was optimized so that malicious access is restricted.
-* Modifiers where used with ``reverts`` to control and restrict malicious access.
+* Modifiers were used with ``reverts`` to control and restrict malicious access.
 
 ## Code auditing
-* MythX was user to audit code security and suggested optimizations were implemented.
+* MythX was used to audit code security and suggested optimizations were implemented.
 
 ## Optimized Gas Usage
-* when reader is fetching new books, loops are limited and fetch is done in batches.
+* when reader is fetches new books, loops are limited and fetch is done in batches.
 * nested loops were avoided and restricted where necessary.
+* variable types were effectively utilized.
 
 ## Re-entracy Attacks
 * withdrawal payment design pattern was used to prevent loss of control and/or evading of remaining vital contract operations (by external caller).
